@@ -30,21 +30,27 @@ class Ball extends GameObject {
 	}
 
 	move() {
+		let reflected = false;
+
 		if (!this.hasLaunched) {
 			this.x = this.targetX;
 
-			return;
+			return reflected;
 		}
 			
 		if (this.x > this.gameWidth || this.x < 0) {
 			this.xSpeed *= -1;
+			reflected = true;
 		}
 		if (this.y < this.gameStartY) {
 			this.ySpeed *= -1;
+			reflected = true;
 		}
 
 		this.x += this.xSpeed;
 		this.y += this.ySpeed;
+
+		return reflected;
 	}
 	
 	reset(x, y) {

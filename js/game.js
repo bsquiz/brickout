@@ -11,12 +11,17 @@ const Brickout = {
 	paddle: null,
 	isRunning: false,
 	score: 0,
-	lives: 99,
+	lives: 3,
 	level: 1,
 	lastScore: 0,
 	lastLives: 3,
 	currentHitTestRow: 0,
 	clearedRows: 0,
+	sine: BAudio.createOscillator(BAudio.Oscillators.SINE),
+	square: BAudio.createOscillator(BAudio.Oscillators.SQUARE),
+	wallBounceF: 300,
+	paddleBounceF: 600,
+	brickBounceF: 900,
 
 	looseALife() {
 		this.lives--;
@@ -36,6 +41,12 @@ const Brickout = {
 		row.removeBrick(index);	
 		if (powerup !== null) {
 			this.powerups.push(powerup);
+	BAudio.playOscillator(this.square, 300);
+
+		window.setTimeout(() => {
+			BAudio.playOscillator(this.square, 400);	
+		}, 200);
+
 		}
 	},
 
@@ -48,7 +59,7 @@ const Brickout = {
 				bricks[i].takeDamage();
 			
 				this.ball.reflectOffBrick();
-
+				BAudio.playOscillator(this.sine, this.brickBounceF, 25);
 				if (bricks[i].getHP() === 0) {
 					this.clearBrick(bricks[i], row, i);
 
@@ -75,7 +86,8 @@ const Brickout = {
 	hitTestBallWithPlayer() {
 		if (this.ball.hitTest(this.paddle)) {
 			this.ball.reflectOffPaddle(this.paddle.getX(), this.paddle.getWidth());
-			
+			BAudio.playOscillator(this.sine, this.paddleBounceF, 25);
+
 			return;
 		}
 
@@ -118,7 +130,10 @@ const Brickout = {
 		currentRowIndex = parseInt(currentRowIndex);
 		currentRowIndex = Math.max(currentRowIndex, 0);
 
-		this.ball.move();
+		if (this.ball.move()) {
+			// has bounced off wall
+			BAudio.playOscillator(this.sine, this.wallBounceF, 25);	
+		}
 
 		if (bY < this.maxBrickY) {
 			this.currentHitTestRow = currentRowIndex; 
@@ -140,6 +155,12 @@ const Brickout = {
 			}
 			if (powerup.hitTest(this.paddle)) {
 				const type = powerup.getType();
+
+				BAudio.playOscillator(this.square, 300);
+
+		window.setTimeout(() => {
+			BAudio.playOscillator(this.square, 400);	
+		}, 200);
 
 				if (type === powerup.Types.SHRINK) {
 					this.paddle.shrink();
@@ -249,7 +270,16 @@ const Brickout = {
 			0,
 			this.gameHeight / 2,
 			5
-		);	
+		)
+		BAudio.playOscillator(this.square, 300);
+
+		window.setTimeout(() => {
+			BAudio.playOscillator(this.square, 400);	
+		}, 200);
+		window.setTimeout(() => {
+			BAudio.playOscillator(this.square, 500);	
+		}, 400);
+
 		window.setTimeout(() => this.nextLevel(), 1000);
 	},
 	
