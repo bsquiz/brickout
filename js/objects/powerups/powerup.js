@@ -4,7 +4,8 @@ class BrickoutPowerup extends GameObject {
 		
 		this.Types = {
 			SHRINK: 0,
-			EXPAND: 1
+			EXPAND: 1,
+			SUPERBALL: 2
 		};
 
 		this.width = 20;

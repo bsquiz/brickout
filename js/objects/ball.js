@@ -9,7 +9,18 @@ class Ball extends GameObject {
 		this.maxXSpeed = 4;
 		this.maxYSpeed = 4;
 		this.hasLaunched = false;
+		this.isSuperBall = false;
 	}
+
+	reset() {
+		this.isSuperBall = false;
+	}
+
+	setIsSuperBall(superball) {
+		this.isSuperBall = superball;
+	}
+	
+	getIsSuperBall() { return this.isSuperBall; }
 
 	setGameStartY(y) {
 		this.gameStartY = y;

@@ -17,11 +17,19 @@ const Brickout = {
 	lastLives: 3,
 	currentHitTestRow: 0,
 	clearedRows: 0,
-	sine: BAudio.createOscillator(BAudio.Oscillators.SINE),
-	square: BAudio.createOscillator(BAudio.Oscillators.SQUARE),
+	sine: null,
+	square: null,
 	wallBounceF: 300,
 	paddleBounceF: 600,
 	brickBounceF: 900,
+	totalBrickRows: 0,
+	audioInitialized: false,
+	
+	playAudio(oscillator, freq, duration = 100, vol = 0.1) {
+		if (!this.audioInitialized) return;
+
+		BAudio.playOscillator(oscillator, freq, duration, vol);
+	},
 
 	looseALife() {
 		this.lives--;
@@ -30,6 +38,11 @@ const Brickout = {
 
 		if (this.lives === 0) {
 			this.gameOver();
+		} else {
+			this.playAudio(this.square, 300);
+			window.setTimeout(() => {
+				this.playAudio(this.square, 300);
+			}, 300);
 		}
 	},
 
@@ -41,11 +54,11 @@ const Brickout = {
 		row.removeBrick(index);	
 		if (powerup !== null) {
 			this.powerups.push(powerup);
-	BAudio.playOscillator(this.square, 300);
+			this.playAudio(this.square, 300);
 
-		window.setTimeout(() => {
-			BAudio.playOscillator(this.square, 400);	
-		}, 200);
+			window.setTimeout(() => {
+				this.playAudio(this.square, 400);	
+			}, 200);
 
 		}
 	},
@@ -57,15 +70,18 @@ const Brickout = {
 		for (let i=0; i<bricks.length; i++) {
 			if (this.ball.hitTest(bricks[i])) {
 				bricks[i].takeDamage();
-			
-				this.ball.reflectOffBrick();
-				BAudio.playOscillator(this.sine, this.brickBounceF, 25);
+		
+				if (!this.ball.getIsSuperBall()) {	
+					this.ball.reflectOffBrick();
+				}
+				this.playAudio(this.sine, this.brickBounceF, 25);
 				if (bricks[i].getHP() === 0) {
 					this.clearBrick(bricks[i], row, i);
 
 					if (row.isCleared()) {
 						this.clearedRows++;
-						if (this.clearedRows === this.rows.length) {
+						if (this.clearedRows === this.totalBrickRows) {
+							this.clearedRows = 0;
 							this.winLevel();
 						}
 					}
@@ -86,14 +102,13 @@ const Brickout = {
 	hitTestBallWithPlayer() {
 		if (this.ball.hitTest(this.paddle)) {
 			this.ball.reflectOffPaddle(this.paddle.getX(), this.paddle.getWidth());
-			BAudio.playOscillator(this.sine, this.paddleBounceF, 25);
+			this.playAudio(this.sine, this.paddleBounceF, 25);
 
 			return;
 		}
 
 		if (this.ball.isPastPlayer()) {
 			this.looseALife();
-			
 		}
 	},
 	
@@ -132,7 +147,7 @@ const Brickout = {
 
 		if (this.ball.move()) {
 			// has bounced off wall
-			BAudio.playOscillator(this.sine, this.wallBounceF, 25);	
+			this.playAudio(this.sine, this.wallBounceF, 25);	
 		}
 
 		if (bY < this.maxBrickY) {
@@ -156,17 +171,28 @@ const Brickout = {
 			if (powerup.hitTest(this.paddle)) {
 				const type = powerup.getType();
 
-				BAudio.playOscillator(this.square, 300);
+				this.playAudio(this.square, 300);
 
-		window.setTimeout(() => {
-			BAudio.playOscillator(this.square, 400);	
-		}, 200);
+				window.setTimeout(() => {
+					this.playAudio(this.square, 400);	
+				}, 200);
 
-				if (type === powerup.Types.SHRINK) {
+				switch (type) {
+					case powerup.Types.SHRINK:
 					this.paddle.shrink();
-				} else if(type === powerup.Types.EXPAND) {
+					break;
+				
+					case powerup.Types.EXPAND:
 					this.paddle.expand();
+					break;
+
+					case powerup.Types.SUPERBALL:
+					this.ball.setIsSuperBall(true);
+					break;
+
+					default: break;
 				}
+
 				this.powerups.splice(i, 1);
 			}
 		}
@@ -200,9 +226,21 @@ const Brickout = {
 	},
 
 	loadLevel(level = []) {
+		this.totalBrickRows = 0;
 		this.rows = BrickoutLevels.parseLevel(level, this.hudYOffset);	
+		this.rows.forEach(row => {
+			for (let i=0; i<row.bricks.length; i++) {
+				if (row.bricks[i] !== ' ') {
+					this.totalBrickRows++;
+
+					return;
+				}
+			}
+		});
+
 		this.maxBrickY = (this.rows.length * this.brickHeight) + this.hudYOffset; 
 		this.paddle.reset();
+		this.ball.reset();
 		this.resetBall();
 		BrickoutGraphics.setRows(this.rows);
 	},
@@ -253,10 +291,12 @@ const Brickout = {
 		this.level++;
 		BrickoutGraphics.setLevel(this.level);
 		const levelIndex = this.level - 1;
+
 		if (levelIndex > BrickoutLevels.levels.length) {
 			this.winGame();
 			return;
 		}
+
 		this.startGame();
 		BrickoutGraphics.forceDraw();
 		this.loadLevel(BrickoutLevels.levels[levelIndex]);
@@ -271,13 +311,13 @@ const Brickout = {
 			this.gameHeight / 2,
 			5
 		)
-		BAudio.playOscillator(this.square, 300);
+		this.playAudio(this.square, 300);
 
 		window.setTimeout(() => {
-			BAudio.playOscillator(this.square, 400);	
+			this.playAudio(this.square, 400);	
 		}, 200);
 		window.setTimeout(() => {
-			BAudio.playOscillator(this.square, 500);	
+			this.playAudio(this.square, 500);	
 		}, 400);
 
 		window.setTimeout(() => this.nextLevel(), 1000);
@@ -293,5 +333,14 @@ const Brickout = {
 	
 	getIsRunning() {
 		return this.isRunning;
+	},
+	
+	allowAudio() {
+		this.audioInitialized = true;
+
+		if (this.sine === null) {
+			this.sine = BAudio.createOscillator(BAudio.Oscillators.SINE);
+			this.square = BAudio.createOscillator(BAudio.Oscillators.SQUARE);
+		}
 	}
 };
