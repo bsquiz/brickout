@@ -8,40 +8,22 @@ class Paddle extends GameObject {
 		this.height = 20;
 		this.autoPlay = false;
 		this.targetX = 0;
-		this.isShrunk = false;
-		this.isExpanded = false;
 	}
 
 	shrink() {
-		if (this.isExpanded) {
-			this.normalSize();
-			
-			return;
-		}
-
-		if (!this.isShrunk) {
-			this.width = this.normalWidth / 2;
-			this.isShrunk = true;
-		}
+		this.width = this.normalWidth / 2;
 	}
 	
 	expand() {
-		if (this.isShrunk) {
-			this.normalSize();
-			
-			return;
-		}
-
-		if (!this.isExpanded) {
-			this.width = this.normalWidth * 2;
-			this.isExpanded = true;
-		}
+		this.width = this.normalWidth * 2;
 	}
-	
-	normalSize() {
-		this.width = this.normalWidth;
-		this.isShrunk = false;
-		this.isExpanded = false;
+
+	recievePowerup(type) {
+		if (type === BrickoutPowerup.Types.SHRINK) {
+			this.shrink();
+		} else {
+			this.expand();
+		}
 	}
 
 	setAutoPlay(autoPlay) {
@@ -50,6 +32,10 @@ class Paddle extends GameObject {
 
 	setTargetX(targetX) {
 		this.targetX = targetX;
+	}
+	
+	normalSize() {
+		this.width = this.normalWidth;
 	}
 
 	getMaxXSpeed() {
@@ -64,7 +50,6 @@ class Paddle extends GameObject {
 	reset() {
 		this.x = this.gameWidth / 2 - this.width / 2;
 		this.y = this.gameHeight - this.height;
-		this.normalSize();
 	}
 
 	moveWithMouse(x) {

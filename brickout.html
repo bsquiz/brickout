@@ -4,21 +4,19 @@
 	</head>
 	
 	<body>
+		<div class="menu">
+			<h1>Brickout</h1>
+			<ul>
+				<li>launch ball with click</li>
+				<li>move paddle with mouse</li>
+				<li>collect power ups</li>
+				<li>break the bricks good like you should</li>
+			</ul>
+			<button onclick="Brickout.startGameplay()">start</button>
+		</div>
 		<canvas id="canvas" width="500" height="500"></canvas>
-		<button onclick="Brickout.allowAudio()">allow audio</button>
-		<script src="js/objects/gameObject.js"></script>
-		<script src="js/objects/paddle.js"></script>
-		<script src="js/objects/ball.js"></script>
-		<script src="js/objects/brick.js"></script>
-		<script src="js/objects/powerups/powerup.js"></script>
-		<script src="js/utils/font.js"></script>
-		<script src="js/utils/input.js"></script>
-		<script src="js/utils/audio.js"></script>
-		<script src="js/hud.js"></script>
-		<script src="js/row.js"></script>
-		<script src="js/levels.js"></script>
-		<script src="js/graphics.js"></script>
-		<script src="js/game.js"></script>
+		<button onclick="Brickout.allowAudio()">enable audio</button>
+		<script src="js/all.js"></script>
 		<script>
 			const $brickoutCanvas = document.getElementById('canvas');
 
@@ -54,6 +52,17 @@
 			canvas {
 				border: solid thin white;
 				padding: 5px;
+			}
+			.menu {
+				padding: 5px;
+				position: absolute;
+				width: 500px;
+				height: 500px;
+				background: black;
+				color: white; 
+			}
+			.hide {
+				display: none;
 			}
 		</style>
 	</body>

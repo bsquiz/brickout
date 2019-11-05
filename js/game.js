@@ -24,6 +24,11 @@ const Brickout = {
 	brickBounceF: 900,
 	totalBrickRows: 0,
 	audioInitialized: false,
+	GameStates: {
+		MENU: 0,
+		GAME: 1
+	},
+	gameState: 0,
 	
 	playAudio(oscillator, freq, duration = 100, vol = 0.1) {
 		if (!this.audioInitialized) return;
@@ -206,6 +211,10 @@ const Brickout = {
 			return;
 		}
 
+		if (this.gameState === this.GameStates.MENU) {
+			return;
+		}
+
 		this.oldScore = this.score;
 		this.oldLives = this.lives;
 
@@ -342,5 +351,10 @@ const Brickout = {
 			this.sine = BAudio.createOscillator(BAudio.Oscillators.SINE);
 			this.square = BAudio.createOscillator(BAudio.Oscillators.SQUARE);
 		}
+	},
+	
+	startGameplay() {
+		this.gameState = this.GameStates.GAME;
+		document.getElementsByClassName('menu')[0].className = 'menu hide';
 	}
 };
