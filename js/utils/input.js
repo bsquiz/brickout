@@ -7,9 +7,11 @@ const BrickoutInput = {
         Keys: {
                 LEFT: 37,
                 RIGHT: 39,
+		SPACE: 32,
                 P: 80
         },
 	KeysByCode: {
+		32: 'SPACE',
 		37: 'LEFT',
 		39: 'RIGHT',
 		80: 'P'
@@ -22,6 +24,7 @@ const BrickoutInput = {
 		clickY: 0,
 		clicked: false
 	},
+	
 	getMouseX() {
 		return this.mouse.x;
 	},

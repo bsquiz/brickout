@@ -10,6 +10,14 @@ class Paddle extends GameObject {
 		this.targetX = 0;
 	}
 
+	startMoveRight() {
+		this.xSpeed = this.maxXSpeed;
+	}
+	
+	startMoveLeft() {
+		this.xSpeed = this.maxXSpeed * -1;
+	}
+
 	shrink() {
 		this.width = this.normalWidth / 2;
 	}

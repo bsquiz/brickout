@@ -1,21 +1,23 @@
 <html>
 	<head>
 		<title>brickout</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	
 	<body>
+		<div id="wrapper">
 		<div class="menu">
 			<h1>Brickout</h1>
-			<ul>
-				<li>launch ball with click</li>
-				<li>move paddle with mouse</li>
-				<li>collect power ups</li>
-				<li>break the bricks good like you should</li>
-			</ul>
+			<button onclick="Brickout.allowAudio()">enable audio</button>
 			<button onclick="Brickout.startGameplay()">start</button>
 		</div>
 		<canvas id="canvas" width="500" height="500"></canvas>
-		<button onclick="Brickout.allowAudio()">enable audio</button>
+		<div id="buttons">
+			<button data-btn="37"><</button>
+			<button data-btn="32">^</button>
+			<button data-btn="39">></button>
+		</div>
+		</div>
 		<script src="js/all.js"></script>
 		<script>
 			const $brickoutCanvas = document.getElementById('canvas');
@@ -26,6 +28,16 @@
 			}
 
 			window.onload = function() {
+
+				const $btns = document.getElementById('buttons');
+				$btns.addEventListener('mousedown', function(e) {
+					const buttonId = e.target.getAttribute("data-btn");
+					BrickoutInput.toggleKeyState(buttonId);
+				});
+				$btns.addEventListener('mouseup', function(e) {
+					const buttonId = e.target.getAttribute("data-btn");
+					BrickoutInput.toggleKeyState(buttonId);
+				});
 				Brickout.init();
 				Brickout.loadLevel(BrickoutLevels.levels[0]);
 				Brickout.startGame();
@@ -33,10 +45,12 @@
 				window.requestAnimationFrame(updateBrickoutGame);
 			};
 			window.onkeydown = function(e) {
-				BrickoutInput.onKeyDown(e);
+				if (e.repeat) return;
+
+				BrickoutInput.toggleKeyState(e.keyCode);
 			}; 
 			window.onkeyup = function(e) {
-				BrickoutInput.onKeyUp(e);
+				BrickoutInput.toggleKeyState(e.keyCode);
 			};
 			$brickoutCanvas.addEventListener('mousemove', function(e) {
 				BrickoutInput.onMouseMove(e);
@@ -44,14 +58,57 @@
 			$brickoutCanvas.addEventListener('click', function(e) {
 				BrickoutInput.onClick(e);
 			});
+			
 		</script>
 		<style>
 			body {
+				background: #2e2e2e;
+				font-size: 24px;
+				color: white;
+			}
+		
+			h1 {
+				text-align: center;
+				text-transform: uppercase;
+			}
+	
+			canvas {
+				padding: 5px;
 				background: black;
 			}
-			canvas {
+			button {
+				background: #2e2e2e;
+				width: 100%;
+				height: 50px;
+				margin-top: 15px;
+				border: none;
+				font-size: 24px;
+				color: white;
+			}
+			#wrapper {
+				width: 500px;
+				margin: auto;
+			}
+			#buttons {
+				display: none;
+				height: 10%;
+				margin-top: 5%;
+			}
+			@media (max-width: 640px) {
+				canvas {
+					width: 100%;
+					height: 80%;
+				}
+				#buttons {
+					display: flex;
+				}
+			}
+		
+			#buttons button {
+				height: 100%;
+				margin-top: 0;
+				font-size: 60px;
 				border: solid thin white;
-				padding: 5px;
 			}
 			.menu {
 				padding: 5px;
@@ -59,7 +116,6 @@
 				width: 500px;
 				height: 500px;
 				background: black;
-				color: white; 
 			}
 			.hide {
 				display: none;

@@ -12,10 +12,6 @@ class Ball extends GameObject {
 		this.isSuperBall = false;
 	}
 
-	reset() {
-		this.isSuperBall = false;
-	}
-
 	setIsSuperBall(superball) {
 		this.isSuperBall = superball;
 	}

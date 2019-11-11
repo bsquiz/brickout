@@ -40,6 +40,7 @@ const Brickout = {
 		this.lives--;
 		BrickoutGraphics.setLives(this.lives);
 		this.resetBall();
+		this.paddle.normalSize();
 
 		if (this.lives === 0) {
 			this.gameOver();
@@ -102,6 +103,7 @@ const Brickout = {
 			this.paddle.getX() + this.paddle.getWidth() / 2,
 			this.paddle.getY() - this.paddle.getHeight()
 		);
+		this.ball.setIsSuperBall(false);
 	},
 
 	hitTestBallWithPlayer() {
@@ -132,8 +134,8 @@ const Brickout = {
 				this.paddle.getX() + this.paddle.getWidth() / 2,
 				this.paddle.getY() - this.paddle.getHeight()
 			);
-		
-			if (BrickoutInput.getMouseClicked()) {
+	
+			if (BrickoutInput.keyIsDown(BrickoutInput.Keys.SPACE)) {
 				this.ball.launch();
 			}
 	
@@ -202,6 +204,18 @@ const Brickout = {
 			}
 		}
 	},
+
+	movePaddleWithKeys() {
+		this.paddle.setIsMoving(false);
+
+		if (BrickoutInput.keyIsDown(BrickoutInput.Keys.LEFT)) {
+			this.paddle.startMoveLeft();
+			this.paddle.setIsMoving(true);
+		} else if (BrickoutInput.keyIsDown(BrickoutInput.Keys.RIGHT)) {
+			this.paddle.startMoveRight();
+			this.paddle.setIsMoving(true);	
+		}
+	},
 	
 	update() {
 		let updateHUD = false;
@@ -218,8 +232,9 @@ const Brickout = {
 		this.oldScore = this.score;
 		this.oldLives = this.lives;
 
-		this.paddle.setTargetX(this.ball.getX());
-		this.paddle.moveWithMouse(BrickoutInput.getMouseX());
+		this.movePaddleWithKeys();
+		this.paddle.move();
+		//this.paddle.moveWithMouse(BrickoutInput.getMouseX());
 		this.updateBall();
 		this.updatePowerups();
 
@@ -249,7 +264,6 @@ const Brickout = {
 
 		this.maxBrickY = (this.rows.length * this.brickHeight) + this.hudYOffset; 
 		this.paddle.reset();
-		this.ball.reset();
 		this.resetBall();
 		BrickoutGraphics.setRows(this.rows);
 	},
@@ -350,6 +364,7 @@ const Brickout = {
 		if (this.sine === null) {
 			this.sine = BAudio.createOscillator(BAudio.Oscillators.SINE);
 			this.square = BAudio.createOscillator(BAudio.Oscillators.SQUARE);
+			alert('Audio Enabled');
 		}
 	},
 	

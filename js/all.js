@@ -361,9 +361,11 @@ const BrickoutInput = {
         Keys: {
                 LEFT: 37,
                 RIGHT: 39,
+		SPACE: 32,
                 P: 80
         },
 	KeysByCode: {
+		32: 'SPACE',
 		37: 'LEFT',
 		39: 'RIGHT',
 		80: 'P'
@@ -376,6 +378,7 @@ const BrickoutInput = {
 		clickY: 0,
 		clicked: false
 	},
+	
 	getMouseX() {
 		return this.mouse.x;
 	},
@@ -542,10 +545,6 @@ class Ball extends GameObject {
 		this.isSuperBall = false;
 	}
 
-	reset() {
-		this.isSuperBall = false;
-	}
-
 	setIsSuperBall(superball) {
 		this.isSuperBall = superball;
 	}
@@ -709,6 +708,14 @@ class Paddle extends GameObject {
 		this.targetX = 0;
 	}
 
+	startMoveRight() {
+		this.xSpeed = this.maxXSpeed;
+	}
+	
+	startMoveLeft() {
+		this.xSpeed = this.maxXSpeed * -1;
+	}
+
 	shrink() {
 		this.width = this.normalWidth / 2;
 	}
@@ -826,6 +833,238 @@ class BrickoutPowerup extends GameObject {
 		ctx.fillRect(this.x, this.y, this.width, this.height);
 	}
 }
+const BrickoutGraphics = {
+	ctx: null,
+	ball: null,
+	paddle: null,
+	rows: [],
+	powerups: [],
+	hudYOffset: 0,
+	lives: 0,
+	level: 1,
+	score: 0,
+
+	setPowerup(powerups) {
+		this.powerups = powerups;
+	},
+	
+	setRows(rows) {
+		this.rows = rows;
+	},
+	
+	setLives(lives) {
+		this.lives = lives;
+	},
+
+	setLevel(level) {
+		this.level = level;
+	},
+	
+	setScore(score) {
+		this.score = score;
+	},
+
+        draw(drawStartY, width, height) {
+                this.ctx.clearRect(0, drawStartY, width, height);
+                this.paddle.draw(this.ctx);
+                this.ball.draw(this.ctx);
+
+                for (let i=0; i<this.powerups.length; i++) {
+                        this.powerups[i].draw(this.ctx);
+                }
+
+                for (let i=0; i<this.rows.length; i++) {
+                        this.rows[i].draw(this.ctx);
+                }
+
+		if (drawStartY < this.hudYOffset) {
+			BrickoutHUD.draw(this.ctx, this.score, this.lives, this.level);
+		}
+        },
+
+        forceDraw() {
+                this.draw(0, true);
+        },
+
+	drawString(string, x, y, size) {
+		BrickoutFont.drawString(string, x, y, size, this.ctx);
+	},
+	
+	init(canvas, hudYOffset, paddle, ball, powerups) {
+		this.ctx = canvas.getContext('2d');
+		this.ctx.strokeStyle = 'white';
+		this.ctx.fillStyle = 'white';
+		this.hudYOffset = hudYOffset;
+		this.paddle = paddle;
+		this.ball = ball;
+		this.powerups = powerups;
+	}
+};
+const BrickoutLevels = {
+	BrickColors: ['white', 'blue', 'red', 'green', 'yellow', 'orange'],
+	levels: [
+		[
+			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x12', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x']
+		],[
+			['x','x','x','x','x','x','x','x','x','x'],
+			[' ','x',' ','x',' ','x',' ','x11',' ','x']
+		],[
+			[' ',' ',' ',' ','x','x',' ',' ',' ',' '],
+			[' ',' ',' ','x','x','x','x',' ',' ',' '],
+			[' ',' ','x','x','x','x','x','x',' ',' '],
+			[' ','x','x','x','x','x','x11','x','x',' '],
+			[' ',' ','x','x','x','x','x','x',' ',' '],
+			[' ',' ',' ','x','x','x','x',' ',' ',' '],
+			[' ',' ',' ',' ','x','x',' ',' ',' ',' ']
+		],[
+			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+			[' ','x','x',' ',' ',' ',' ','x','x',' '],
+			[' ','x','x',' ',' ',' ',' ','x','x',' '],
+			[' ','x','x','x',' ',' ','x','x','x',' '],
+			[' ',' ','x','x',' ',' ','x','x',' ',' '],
+			[' ',' ',' ','x','x','x','x',' ',' ',' '],
+			[' ',' ',' ',' ','x','x',' ',' ',' ',' ']
+		],[
+			['x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2'],
+			['x', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
+			[' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x'],
+			['x', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
+			['x', 'x', 'x', 'x', 'x', 'x11', 'x', 'x', 'x', 'x'] 
+		],[
+			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x','x','x']
+		],[
+			['x',' ','x',' ',' ',' ','x',' ','x',' '],
+			[' ','x',' ','x',' ','x',' ','x',' ','x'],
+			['x',' ','x',' ','x',' ','x',' ','x',' '],
+			[' ','x',' ','x',' ','x',' ','x',' ','x'],
+			[' ',' ','x',' ','x',' ','x',' ',' ',' ']
+		],[
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x','x','x'],
+			['x','x12','x','x','x','x','x','x','x','x']
+		],[
+			['x',' ','x','x','x',' ',' ','x','x','x'],
+			['x',' ','x',' ','x',' ',' ','x',' ',' '],
+			['x',' ','x',' ','x',' ',' ','x',' ',' '],
+			['x',' ','x',' ','x',' ',' ','x',' ',' '],
+			['x',' ','x',' ','x','x','x','x',' ',' ']
+		]
+	],
+
+	parseLevel(level, yOffset) {
+		const rows = [];
+		let x = 0;
+		let y = yOffset;
+
+		for (let row=0; row<level.length; row++) {
+			let bricks = [];
+
+			for (let col = 0; col < level[row].length; col++) {
+				const b = level[row][col];
+
+				if (b[0] === 'x') {
+					const brick = new Brick(x, y);
+
+					if (b[1]) {
+						brick.setHP(parseInt(b[1]));
+					}
+
+					if (b[2]) {
+						const type = parseInt(b[2]);
+						const powerup = new BrickoutPowerup(type);
+						powerup.setX(x);
+						powerup.setY(y);
+						brick.addPowerup(powerup);
+					}
+
+					bricks.push(brick);
+				}
+
+				x += 50;
+			}
+
+			rows.push(new Row(bricks, this.BrickColors[row]));
+			x = 0;
+			y += 20;
+		}
+
+		return rows;
+	}
+};
+const BrickoutHUD = {
+	paddingTop: 0,
+	paddingLeft: 0,
+	textScale: 2,
+	livesTextX: 200,
+	levelTextX: 350,
+
+	draw(ctx, score, lives, level) {
+                BrickoutFont.drawString(
+                        `score ${score}`,
+                        this.paddingLeft,
+                        this.paddingTop,
+                        this.textScale,
+                        ctx
+                );
+                BrickoutFont.drawString(
+                        `lives ${lives}`,
+                        this.paddingLeft + this.livesTextX,
+                        this.paddingTop,
+                        this.textScale,
+                        ctx
+                );
+		BrickoutFont.drawString(
+                        `level ${level}`,
+                        this.paddingLeft + this.levelTextX,
+                        this.paddingTop,
+                        this.textScale,
+                        ctx
+                );
+        }
+};
+class Row {
+	constructor(bricks, color) {
+		this.bricks = bricks;
+		this.color = color;
+		this.y = 0;
+		if (this.bricks.length > 0) {
+			this.y = this.bricks[0].getY();
+		}
+	}
+
+	getBricks() { return this.bricks; }
+	getColor() { return this.color; }
+	
+	removeBrick(index) {
+		this.bricks.splice(index, 1);
+	}
+
+	isCleared() {
+		return this.bricks.length === 0;
+	}
+
+	getY() {
+		return this.y;
+	}
+
+	draw(ctx) {
+		ctx.fillStyle = this.color;
+		ctx.beginPath();
+		for (let i=0; i<this.bricks.length; i++) {
+			this.bricks[i].draw(ctx);
+		}
+		ctx.fill();
+	}
+}
 const Brickout = {
 	$canvas: null,
 	gameWidth: 0,
@@ -868,6 +1107,7 @@ const Brickout = {
 		this.lives--;
 		BrickoutGraphics.setLives(this.lives);
 		this.resetBall();
+		this.paddle.normalSize();
 
 		if (this.lives === 0) {
 			this.gameOver();
@@ -930,6 +1170,7 @@ const Brickout = {
 			this.paddle.getX() + this.paddle.getWidth() / 2,
 			this.paddle.getY() - this.paddle.getHeight()
 		);
+		this.ball.setIsSuperBall(false);
 	},
 
 	hitTestBallWithPlayer() {
@@ -960,8 +1201,8 @@ const Brickout = {
 				this.paddle.getX() + this.paddle.getWidth() / 2,
 				this.paddle.getY() - this.paddle.getHeight()
 			);
-		
-			if (BrickoutInput.getMouseClicked()) {
+	
+			if (BrickoutInput.keyIsDown(BrickoutInput.Keys.SPACE)) {
 				this.ball.launch();
 			}
 	
@@ -1030,6 +1271,18 @@ const Brickout = {
 			}
 		}
 	},
+
+	movePaddleWithKeys() {
+		this.paddle.setIsMoving(false);
+
+		if (BrickoutInput.keyIsDown(BrickoutInput.Keys.LEFT)) {
+			this.paddle.startMoveLeft();
+			this.paddle.setIsMoving(true);
+		} else if (BrickoutInput.keyIsDown(BrickoutInput.Keys.RIGHT)) {
+			this.paddle.startMoveRight();
+			this.paddle.setIsMoving(true);	
+		}
+	},
 	
 	update() {
 		let updateHUD = false;
@@ -1046,8 +1299,9 @@ const Brickout = {
 		this.oldScore = this.score;
 		this.oldLives = this.lives;
 
-		this.paddle.setTargetX(this.ball.getX());
-		this.paddle.moveWithMouse(BrickoutInput.getMouseX());
+		this.movePaddleWithKeys();
+		this.paddle.move();
+		//this.paddle.moveWithMouse(BrickoutInput.getMouseX());
 		this.updateBall();
 		this.updatePowerups();
 
@@ -1077,7 +1331,6 @@ const Brickout = {
 
 		this.maxBrickY = (this.rows.length * this.brickHeight) + this.hudYOffset; 
 		this.paddle.reset();
-		this.ball.reset();
 		this.resetBall();
 		BrickoutGraphics.setRows(this.rows);
 	},
@@ -1178,6 +1431,7 @@ const Brickout = {
 		if (this.sine === null) {
 			this.sine = BAudio.createOscillator(BAudio.Oscillators.SINE);
 			this.square = BAudio.createOscillator(BAudio.Oscillators.SQUARE);
+			alert('Audio Enabled');
 		}
 	},
 	
@@ -1186,217 +1440,3 @@ const Brickout = {
 		document.getElementsByClassName('menu')[0].className = 'menu hide';
 	}
 };
-const BrickoutGraphics = {
-	ctx: null,
-	ball: null,
-	paddle: null,
-	rows: [],
-	powerups: [],
-	hudYOffset: 0,
-	lives: 0,
-	level: 1,
-	score: 0,
-
-	setPowerup(powerups) {
-		this.powerups = powerups;
-	},
-	
-	setRows(rows) {
-		this.rows = rows;
-	},
-	
-	setLives(lives) {
-		this.lives = lives;
-	},
-
-	setLevel(level) {
-		this.level = level;
-	},
-	
-	setScore(score) {
-		this.score = score;
-	},
-
-        draw(drawStartY, width, height) {
-                this.ctx.clearRect(0, drawStartY, width, height);
-                this.paddle.draw(this.ctx);
-                this.ball.draw(this.ctx);
-
-                for (let i=0; i<this.powerups.length; i++) {
-                        this.powerups[i].draw(this.ctx);
-                }
-
-                for (let i=0; i<this.rows.length; i++) {
-                        this.rows[i].draw(this.ctx);
-                }
-
-		if (drawStartY < this.hudYOffset) {
-			BrickoutHUD.draw(this.ctx, this.score, this.lives, this.level);
-		}
-        },
-
-        forceDraw() {
-                this.draw(0, true);
-        },
-
-	drawString(string, x, y, size) {
-		BrickoutFont.drawString(string, x, y, size, this.ctx);
-	},
-	
-	init(canvas, hudYOffset, paddle, ball, powerups) {
-		this.ctx = canvas.getContext('2d');
-		this.ctx.strokeStyle = 'white';
-		this.ctx.fillStyle = 'white';
-		this.hudYOffset = hudYOffset;
-		this.paddle = paddle;
-		this.ball = ball;
-		this.powerups = powerups;
-	}
-};
-const BrickoutHUD = {
-	paddingTop: 0,
-	paddingLeft: 0,
-	textScale: 2,
-	livesTextX: 200,
-	levelTextX: 350,
-
-	draw(ctx, score, lives, level) {
-                BrickoutFont.drawString(
-                        `score ${score}`,
-                        this.paddingLeft,
-                        this.paddingTop,
-                        this.textScale,
-                        ctx
-                );
-                BrickoutFont.drawString(
-                        `lives ${lives}`,
-                        this.paddingLeft + this.livesTextX,
-                        this.paddingTop,
-                        this.textScale,
-                        ctx
-                );
-		BrickoutFont.drawString(
-                        `level ${level}`,
-                        this.paddingLeft + this.levelTextX,
-                        this.paddingTop,
-                        this.textScale,
-                        ctx
-                );
-        }
-};
-const BrickoutLevels = {
-	BrickColors: ['white', 'blue', 'red', 'green', 'yellow', 'orange'],
-	levels: [
-		[
-			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-			['x','x','x','x','x','x','x','x','x','x'],
-			['x12', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x']
-		],[
-			['x','x','x','x','x','x','x','x','x','x'],
-			[' ','x',' ','x',' ','x',' ','x11',' ','x']
-		],[
-			[' ',' ',' ',' ','x','x',' ',' ',' ',' '],
-			[' ',' ',' ','x','x','x','x',' ',' ',' '],
-			[' ',' ','x','x','x','x','x','x',' ',' '],
-			[' ','x','x','x','x','x','x11','x','x',' '],
-			[' ',' ','x','x','x','x','x','x',' ',' '],
-			[' ',' ',' ','x','x','x','x',' ',' ',' '],
-			[' ',' ',' ',' ','x','x',' ',' ',' ',' ']
-		],[
-			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-			[' ','x','x',' ',' ',' ',' ','x','x',' '],
-			[' ','x','x',' ',' ',' ',' ','x','x',' '],
-			[' ','x','x','x',' ',' ','x','x','x',' '],
-			[' ',' ','x','x',' ',' ','x','x',' ',' '],
-			[' ',' ',' ','x','x','x','x',' ',' ',' '],
-			[' ',' ',' ',' ','x','x',' ',' ',' ',' ']
-		],[
-			['x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2', 'x2'],
-			['x', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
-			[' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x'],
-			['x', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
-			['x', 'x', 'x', 'x', 'x', 'x11', 'x', 'x', 'x', 'x'] 
-		],[
-			[' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-			['x','x','x','x','x','x','x','x','x','x'],
-			['x','x','x','x','x','x','x','x','x','x'],
-			['x','x','x','x','x','x','x','x','x','x'],
-			['x','x','x','x','x','x','x','x','x','x']
-		]
-	],
-
-	parseLevel(level, yOffset) {
-		const rows = [];
-		let x = 0;
-		let y = yOffset;
-
-		for (let row=0; row<level.length; row++) {
-			let bricks = [];
-
-			for (let col = 0; col < level[row].length; col++) {
-				const b = level[row][col];
-
-				if (b[0] === 'x') {
-					const brick = new Brick(x, y);
-
-					if (b[1]) {
-						brick.setHP(parseInt(b[1]));
-					}
-
-					if (b[2]) {
-						const type = parseInt(b[2]);
-						const powerup = new BrickoutPowerup(type);
-						powerup.setX(x);
-						powerup.setY(y);
-						brick.addPowerup(powerup);
-					}
-
-					bricks.push(brick);
-				}
-
-				x += 50;
-			}
-
-			rows.push(new Row(bricks, this.BrickColors[row]));
-			x = 0;
-			y += 20;
-		}
-
-		return rows;
-	}
-};
-class Row {
-	constructor(bricks, color) {
-		this.bricks = bricks;
-		this.color = color;
-		this.y = 0;
-		if (this.bricks.length > 0) {
-			this.y = this.bricks[0].getY();
-		}
-	}
-
-	getBricks() { return this.bricks; }
-	getColor() { return this.color; }
-	
-	removeBrick(index) {
-		this.bricks.splice(index, 1);
-	}
-
-	isCleared() {
-		return this.bricks.length === 0;
-	}
-
-	getY() {
-		return this.y;
-	}
-
-	draw(ctx) {
-		ctx.fillStyle = this.color;
-		ctx.beginPath();
-		for (let i=0; i<this.bricks.length; i++) {
-			this.bricks[i].draw(ctx);
-		}
-		ctx.fill();
-	}
-}
