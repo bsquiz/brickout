@@ -18,8 +18,9 @@ const renderFallbackBall = (context: CanvasRenderingContext2D, ball: Ball, overd
   context.fill();
 };
 
-export const getBallGlowColor = (ball: Pick<Ball, 'frozenSlowRemaining' | 'isCharged' | 'isSuper' | 'perfectSuper'>, overdrive: boolean): string => {
+export const getBallGlowColor = (ball: Pick<Ball, 'boostSpeedRemaining' | 'frozenSlowRemaining' | 'isCharged' | 'isSuper' | 'perfectSuper'>, overdrive: boolean): string => {
   if (ball.frozenSlowRemaining > 0) return Constants.Render.Colors.FROZEN_BALL;
+  if (ball.boostSpeedRemaining > 0) return Constants.Render.Colors.BOOSTED_BALL;
   if (overdrive || ball.isCharged) return Constants.Render.Colors.CHARGED_BALL;
   if (ball.isSuper || ball.perfectSuper) return Constants.Render.Colors.SUPER_BALL;
   return Constants.Render.Colors.FOREGROUND;

@@ -9,7 +9,7 @@ describe('menu presentation', () => {
 
   test('uses keyboard instructions when touch input is unavailable', () => {
     expect(getInputMode(false, 0)).toBe('keyboard');
-    expect(getMenuControlHint('keyboard')).toBe('← → move · Double-tap boost · Space launch');
+    expect(getMenuControlHint('keyboard')).toBe('← → move · Shift boost · Space launch');
   });
 
   test('formats stored high scores for display', () => {

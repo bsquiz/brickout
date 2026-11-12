@@ -27,6 +27,7 @@ export const createTestBall = (overrides: Partial<Ball> = {}): Ball => ({
   trail: [],
   portalCooldown: 0,
   frozenSlowRemaining: 0,
+  boostSpeedRemaining: 0,
   ...overrides
 });
 
@@ -59,8 +60,8 @@ export const createTestAlien = (overrides: Partial<Alien> = {}): Alien => ({
   kind: 'scout',
   x: 100,
   y: 235,
-  width: 46,
-  height: 22,
+  width: Constants.Entities.Alien.WIDTH,
+  height: Constants.Entities.Alien.HEIGHT,
   velocityX: 82,
   shootRemaining: 1,
   shotAnimationRemaining: 0,

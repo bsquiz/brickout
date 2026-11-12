@@ -18,7 +18,8 @@ const hitAlienWithReflectedBullet = (state: GameState, bullet: EnemyBullet): boo
     isCharged: true,
     trail: [],
     portalCooldown: 0,
-    frozenSlowRemaining: 0
+    frozenSlowRemaining: 0,
+    boostSpeedRemaining: 0
   };
   hitAlienWithBall(state, reflectedBall);
   return state.alien === null;

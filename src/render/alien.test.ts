@@ -59,7 +59,14 @@ describe('alien sprite rendering', () => {
 
   test('keeps the code-rendered health bar over the boss sprite', () => {
     const context = createTestContext();
-    const boss = createTestAlien({ kind: 'boss', isBoss: true, width: 88, height: 38, hitPoints: 3, maxHitPoints: 6 });
+    const boss = createTestAlien({
+      kind: 'boss',
+      isBoss: true,
+      width: Constants.Entities.Alien.BOSS_WIDTH,
+      height: Constants.Entities.Alien.BOSS_HEIGHT,
+      hitPoints: 3,
+      maxHitPoints: 6
+    });
 
     renderAlien(context, boss, { reducedMotion: true, sprites: createTestSprites() });
 

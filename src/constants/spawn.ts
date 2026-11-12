@@ -9,6 +9,7 @@ export const Spawn = {
       Id.PowerupType.SHIELD,
       Id.PowerupType.MULTIBALL,
       Id.PowerupType.SLOW_MOTION,
+      Id.PowerupType.SPEED_UP,
       Id.PowerupType.SCORE_100,
       Id.PowerupType.SCORE_200,
       Id.PowerupType.SCORE_500

@@ -12,10 +12,10 @@ export const rawLevels: unknown = [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
     [{ powerup: 'score-100' }, { powerup: 'multiball' }, {}, { behavior: 'explosive' }, {}, { powerup: 'shield' }, {}],
-    [{ hitPoints: 1, powerup: 'super-ball' }, {}, { powerup: 'sticky' }, {}, { powerup: 'laser' }, {}, {}]
+    [{ hitPoints: 1, powerup: 'super-ball' }, {}, { powerup: 'sticky' }, { powerup: 'speed-up' }, { powerup: 'laser' }, {}, {}]
   ],
   [
-    [{ behavior: 'armored' }, { behavior: 'frozen' }, { behavior: 'portal', portalId: 'cyan' }, { behavior: 'moving' }, { behavior: 'directional', direction: 'up' }, { behavior: 'lightning' }, { behavior: 'regenerating' }, { behavior: 'portal', portalId: 'cyan' }, { behavior: 'directional', direction: 'down' }, {}],
+    [{ behavior: 'armored' }, { behavior: 'frozen' }, { behavior: 'portal', portalId: 'cyan' }, { behavior: 'moving' }, { behavior: 'directional', direction: 'up' }, { behavior: 'lightning' }, { behavior: 'regenerating' }, { behavior: 'portal', portalId: 'cyan' }, { behavior: 'directional', direction: 'down' }, { behavior: 'boost' }],
     [null, {}, null, { powerup: 'slow-motion' }, null, {}, null, { powerup: 'expand' }, null, {}]
   ],
   [

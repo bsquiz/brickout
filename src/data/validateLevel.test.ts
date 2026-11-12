@@ -18,6 +18,12 @@ describe('validateLevels', () => {
     expect(validateLevels([[row]])[0]?.[0]?.map((brick) => brick?.powerup)).toEqual(['score-100', 'score-200', 'score-500']);
   });
 
+  test('accepts the ball speed-up powerup', () => {
+    const row = [{ powerup: 'speed-up' }];
+
+    expect(validateLevels([[row]])[0]?.[0]?.[0]?.powerup).toBe('speed-up');
+  });
+
   test('rejects malformed row widths', () => {
     expect(() => validateLevels([[[null, null], [null]]])).toThrow('must contain exactly 2 cells');
   });

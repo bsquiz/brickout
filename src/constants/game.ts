@@ -56,6 +56,10 @@ export const Game = {
     Frozen: {
       SLOW_DURATION_SECONDS: 2.5,
       BALL_SPEED_SCALE: 0.55
+    },
+    Boost: {
+      SPEED_DURATION_SECONDS: 2.5,
+      BALL_SPEED_SCALE: 1.5
     }
   },
   SkillShot: {

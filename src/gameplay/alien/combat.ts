@@ -64,7 +64,8 @@ export const hitAlienWithProjectile = (state: GameState, projectile: Projectile)
     isCharged: false,
     trail: [],
     portalCooldown: 0,
-    frozenSlowRemaining: 0
+    frozenSlowRemaining: 0,
+    boostSpeedRemaining: 0
   };
   const hit = hitAlienWithBall(state, laserImpact);
   state.effects.ballImpact = previousBallImpact;

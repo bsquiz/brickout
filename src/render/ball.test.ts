@@ -18,4 +18,10 @@ describe('ball sprite selection', () => {
 
     expect(getBallGlowColor(ball, false)).toBe(Constants.Render.Colors.FROZEN_BALL);
   });
+
+  test('uses a warm glow while the ball is accelerated by a boost brick', () => {
+    const ball = createTestBall({ boostSpeedRemaining: 1 });
+
+    expect(getBallGlowColor(ball, false)).toBe(Constants.Render.Colors.BOOSTED_BALL);
+  });
 });

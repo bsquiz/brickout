@@ -2,6 +2,18 @@ import { rawLevels } from './levels';
 import { validateLevels } from './validateLevel';
 
 describe('handcrafted levels', () => {
+  test('introduces the speed-up powerup in the first level', () => {
+    const levels = validateLevels(rawLevels);
+
+    expect(levels[0]?.flat().some((brick) => brick?.powerup === 'speed-up')).toBe(true);
+  });
+
+  test('includes the boost brick in the special-brick showcase', () => {
+    const levels = validateLevels(rawLevels);
+
+    expect(levels[1]?.flat().some((brick) => brick?.behavior === 'boost')).toBe(true);
+  });
+
   test('finishes with a filled field above a centered indestructible barrier', () => {
     const levels = validateLevels(rawLevels);
     const stage = levels.at(-1);

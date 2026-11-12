@@ -1,3 +1,4 @@
+import { Constants } from '../constants';
 import { PowerupRegistry } from './powerup';
 import { createTestGameState } from '../test/fixtures';
 
@@ -26,6 +27,17 @@ describe('PowerupRegistry', () => {
     expect(state.activeEffects.slowMotionRemaining).toBeGreaterThan(0);
     expect(state.activeEffects.laserRemaining).toBeGreaterThan(0);
     expect(state.activeEffects.shieldCharges).toBe(2);
+  });
+
+  test('applies the speed-up powerup to every active ball', () => {
+    const state = createTestGameState();
+    PowerupRegistry.multiball.apply(state);
+
+    PowerupRegistry['speed-up'].apply(state);
+
+    for (const ball of [state.ball, ...state.extraBalls]) {
+      expect(ball.boostSpeedRemaining).toBe(Constants.Game.Brick.Boost.SPEED_DURATION_SECONDS);
+    }
   });
 
   test('adds score powerups cumulatively and updates the high score', () => {

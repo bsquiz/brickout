@@ -8,7 +8,7 @@ type BrickRenderer = (context: CanvasRenderingContext2D, brick: Brick, color: st
 
 export type BrickSpriteFrame = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export const BrickSpriteFrames: Record<BrickBehavior, BrickSpriteFrame> = {
+export const BrickSpriteFrames: Partial<Record<BrickBehavior, BrickSpriteFrame>> = {
   normal: 0,
   armored: 1,
   moving: 2,
@@ -53,7 +53,7 @@ const drawBrickBase = (context: CanvasRenderingContext2D, brick: Brick, sprite: 
 
 const drawBrickOverlay = (context: CanvasRenderingContext2D, brick: Brick, sprites: HTMLImageElement): void => {
   const frame = BrickSpriteFrames[brick.behavior];
-  if (frame === BrickSpriteFrames.normal) return;
+  if (frame === undefined || frame === BrickSpriteFrames.normal) return;
   const angle = brick.behavior === Constants.Id.BrickBehavior.DIRECTIONAL
     ? { up: 0, right: Math.PI / 2, down: Math.PI, left: -Math.PI / 2 }[brick.direction ?? 'up']
     : 0;
@@ -81,6 +81,27 @@ const drawBrickOverlay = (context: CanvasRenderingContext2D, brick: Brick, sprit
       height: overlayHeight
     }
   });
+  context.restore();
+};
+
+export const drawBoostBrickOverlay = (context: CanvasRenderingContext2D, brick: Brick): void => {
+  const centerX = brick.x + brick.width / 2;
+  const centerY = brick.y + brick.height / 2;
+  const width = Constants.Render.Brick.BOOST_ICON_WIDTH;
+  const height = Constants.Render.Brick.BOOST_ICON_HEIGHT;
+  const gap = Constants.Render.Brick.BOOST_ICON_GAP;
+  context.save();
+  context.strokeStyle = Constants.Render.Brick.BOOST_ICON_COLOR;
+  context.lineWidth = Constants.Render.Brick.BOOST_ICON_LINE_WIDTH;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  for (const offsetY of [-gap / 2, gap / 2]) {
+    context.beginPath();
+    context.moveTo(centerX - width, centerY + height / 2 + offsetY);
+    context.lineTo(centerX, centerY - height / 2 + offsetY);
+    context.lineTo(centerX + width, centerY + height / 2 + offsetY);
+    context.stroke();
+  }
   context.restore();
 };
 
@@ -112,6 +133,7 @@ export const BrickVisualRegistry: Record<BrickBehavior, BrickRenderer> = {
   regenerating: fillBrick,
   lightning: fillBrick,
   frozen: fillBrick,
+  boost: fillBrick,
   portal: fillBrick,
   directional: fillBrick
 };
@@ -133,7 +155,11 @@ export const renderBrick = (context: CanvasRenderingContext2D, brick: Brick, opt
   context.shadowBlur = options.glowEnabled === false ? 0 : brick.behavior === 'lightning' ? 14 : 7;
   if (
     isBrickBaseSpriteReady(options.baseSprite) &&
-    (brick.behavior === Constants.Id.BrickBehavior.NORMAL || isBrickOverlaySheetReady(options.overlaySprites))
+    (
+      brick.behavior === Constants.Id.BrickBehavior.NORMAL ||
+      brick.behavior === Constants.Id.BrickBehavior.BOOST ||
+      isBrickOverlaySheetReady(options.overlaySprites)
+    )
   ) {
     drawBrickBase(context, brick, options.baseSprite);
     if (isBrickOverlaySheetReady(options.overlaySprites)) drawBrickOverlay(context, brick, options.overlaySprites);
@@ -141,6 +167,7 @@ export const renderBrick = (context: CanvasRenderingContext2D, brick: Brick, opt
     BrickVisualRegistry[brick.behavior](context, brick, color);
   }
   context.restore();
+  if (brick.behavior === Constants.Id.BrickBehavior.BOOST) drawBoostBrickOverlay(context, brick);
   drawHitPoints(context, brick);
 
   if (!options.isFinalTarget) return;

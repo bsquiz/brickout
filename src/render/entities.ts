@@ -59,11 +59,13 @@ export const renderEntities = (context: CanvasRenderingContext2D, state: GameSta
       context.globalAlpha = Math.min(finalTarget === undefined ? 0.55 + heatProgress * 0.3 : 0.8, point.life * (finalTarget === undefined ? 2.5 + heatProgress : 3.5));
       context.fillStyle = ball.frozenSlowRemaining > 0
         ? Constants.Render.Colors.FROZEN_BALL
-        : overdrive || ball.isCharged
-          ? Constants.Render.Colors.CHARGED_BALL
-          : ball.isSuper || ball.perfectSuper
-            ? Constants.Render.Colors.SUPER_BALL
-            : finalTarget === undefined ? trailColors[state.trailStyle] : Constants.Render.Colors.SHIELD;
+        : ball.boostSpeedRemaining > 0
+          ? Constants.Render.Colors.BOOSTED_BALL
+          : overdrive || ball.isCharged
+            ? Constants.Render.Colors.CHARGED_BALL
+            : ball.isSuper || ball.perfectSuper
+              ? Constants.Render.Colors.SUPER_BALL
+              : finalTarget === undefined ? trailColors[state.trailStyle] : Constants.Render.Colors.SHIELD;
       context.beginPath();
       context.arc(point.x, point.y, Math.max(1, point.life * (ball.isCharged ? 20 : 13 + heatProgress * 7)), 0, Math.PI * 2);
       context.fill();

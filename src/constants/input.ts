@@ -1,6 +1,5 @@
 export const Input = {
   Keyboard: {
-    DOUBLE_TAP_WINDOW_MS: 240,
     Keys: {
       LEFT: 'ArrowLeft',
       RIGHT: 'ArrowRight',

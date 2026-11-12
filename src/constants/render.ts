@@ -109,7 +109,18 @@ export const Render = {
     PILL_INSET: 0.75,
     GLOW_BLUR: 7,
     ICON_BOUNDS_WIDTH: 24,
-    ICON_BOUNDS_HEIGHT: 18
+    ICON_BOUNDS_HEIGHT: 18,
+    SPEED_ICON_LINE_WIDTH: 2.5,
+    SPEED_ICON_HALF_WIDTH: 3,
+    SPEED_ICON_HALF_HEIGHT: 5,
+    SPEED_ICON_SPACING: 7
+  },
+  Brick: {
+    BOOST_ICON_COLOR: '#fde047',
+    BOOST_ICON_LINE_WIDTH: 2.5,
+    BOOST_ICON_WIDTH: 7,
+    BOOST_ICON_HEIGHT: 4,
+    BOOST_ICON_GAP: 5
   },
   Alien: {
     GLOW_BLUR: 10,
@@ -167,6 +178,7 @@ export const Render = {
     SUPER_BALL: '#ffe44d',
     CHARGED_BALL: '#fde047',
     FROZEN_BALL: '#bae6fd',
+    BOOSTED_BALL: '#fb923c',
     SLOW_MOTION: '#60a5fa',
     TRAIL_NEON: '#22d3ee',
     TRAIL_EMBER: '#fb923c',

@@ -3,7 +3,7 @@ import { createTestPowerup } from '../test/fixtures';
 import { drawPowerupPill, isPowerupSpriteSheetReady, PowerupSpriteFrames, renderPowerup } from './powerup';
 
 describe('powerup sprite rendering', () => {
-  test('maps every powerup type to its row-major frame', () => {
+  test('maps every sprite-backed powerup type to its row-major frame', () => {
     expect(PowerupSpriteFrames).toEqual({
       shrink: 0,
       expand: 1,
@@ -17,6 +17,31 @@ describe('powerup sprite rendering', () => {
       'score-200': 9,
       'score-500': 10
     });
+  });
+
+  test('draws the speed-up chevrons when the spritesheet has no matching frame', () => {
+    const context = {
+      save: jest.fn(),
+      restore: jest.fn(),
+      beginPath: jest.fn(),
+      roundRect: jest.fn(),
+      fill: jest.fn(),
+      stroke: jest.fn(),
+      moveTo: jest.fn(),
+      lineTo: jest.fn(),
+      drawImage: jest.fn()
+    } as unknown as CanvasRenderingContext2D;
+    const sprites = {
+      complete: true,
+      naturalWidth: Constants.Render.Sprite.POWERUP_FRAME_SIZE * Constants.Render.Sprite.POWERUP_FRAME_COLUMNS,
+      naturalHeight: Constants.Render.Sprite.POWERUP_FRAME_SIZE * 3
+    } as HTMLImageElement;
+
+    renderPowerup(context, createTestPowerup({ type: 'speed-up' }), sprites);
+
+    expect(context.drawImage).not.toHaveBeenCalled();
+    expect(context.moveTo).toHaveBeenCalledTimes(2);
+    expect(context.stroke).toHaveBeenCalledTimes(3);
   });
 
   test('draws the selected frame centered on the pickup bounds', () => {

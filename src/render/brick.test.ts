@@ -3,6 +3,7 @@ import { createTestBrick } from '../test/fixtures';
 import {
   BrickSpriteFrames,
   BrickVisualRegistry,
+  drawBoostBrickOverlay,
   getBrickRowFilter,
   isBrickBaseSpriteReady,
   isBrickOverlaySheetReady,
@@ -12,12 +13,12 @@ import type { BrickBehavior } from '../gameplay/types';
 
 describe('BrickVisualRegistry', () => {
   test('provides a focused renderer for every brick behavior', () => {
-    const behaviors: BrickBehavior[] = ['normal', 'armored', 'moving', 'explosive', 'indestructible', 'regenerating', 'lightning', 'frozen', 'portal', 'directional'];
+    const behaviors: BrickBehavior[] = ['normal', 'armored', 'moving', 'explosive', 'indestructible', 'regenerating', 'lightning', 'frozen', 'boost', 'portal', 'directional'];
     expect(Object.keys(BrickVisualRegistry).sort()).toEqual([...behaviors].sort());
     behaviors.forEach((behavior) => expect(typeof BrickVisualRegistry[behavior]).toBe('function'));
   });
 
-  test('maps every brick behavior to its row-major sprite frame', () => {
+  test('maps every sprite-backed brick behavior to its row-major frame', () => {
     expect(BrickSpriteFrames).toEqual({
       normal: 0,
       armored: 1,
@@ -30,6 +31,24 @@ describe('BrickVisualRegistry', () => {
       portal: 8,
       directional: 9
     });
+  });
+
+  test('draws a centered double-chevron for boost bricks', () => {
+    const context = {
+      save: jest.fn(),
+      restore: jest.fn(),
+      beginPath: jest.fn(),
+      moveTo: jest.fn(),
+      lineTo: jest.fn(),
+      stroke: jest.fn()
+    } as unknown as CanvasRenderingContext2D;
+    const brick = createTestBrick({ behavior: 'boost' });
+
+    drawBoostBrickOverlay(context, brick);
+
+    expect(context.beginPath).toHaveBeenCalledTimes(2);
+    expect(context.stroke).toHaveBeenCalledTimes(2);
+    expect(context.lineTo).toHaveBeenCalledWith(brick.x + brick.width / 2, expect.any(Number));
   });
 
   test('cycles the configured tint filter by brick row', () => {

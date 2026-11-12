@@ -12,6 +12,6 @@ export const Ui = {
     WRONG_SIDE: 'WRONG SIDE',
     PLAY_AGAIN: 'Play again',
     TOUCH_CONTROLS: 'Drag to move · Tap to launch',
-    KEYBOARD_CONTROLS: '← → move · Double-tap boost · Space launch'
+    KEYBOARD_CONTROLS: '← → move · Shift boost · Space launch'
   }
 } as const;

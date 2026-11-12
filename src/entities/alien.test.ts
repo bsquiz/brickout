@@ -33,6 +33,20 @@ describe('alien entity', () => {
     expect(createAlien({ random: () => 0, entrySide: 'left', kind: 'shielded' }).hitPoints).toBe(2);
   });
 
+  test('creates regular and boss aliens at the enlarged dimensions', () => {
+    const regular = createAlien({ random: () => 0, entrySide: 'left' });
+    const boss = createAlien({ random: () => 0, entrySide: 'left', isBoss: true });
+
+    expect(regular).toEqual(expect.objectContaining({
+      width: Constants.Entities.Alien.WIDTH,
+      height: Constants.Entities.Alien.HEIGHT
+    }));
+    expect(boss).toEqual(expect.objectContaining({
+      width: Constants.Entities.Alien.BOSS_WIDTH,
+      height: Constants.Entities.Alien.BOSS_HEIGHT
+    }));
+  });
+
   test('defines gameplay and rendering metadata for every alien kind', () => {
     expect(Object.keys(AlienRegistry).sort()).toEqual(['boss', 'gunner', 'scout', 'shielded', 'splitter', 'thief']);
     Object.values(AlienRegistry).forEach((definition) => {

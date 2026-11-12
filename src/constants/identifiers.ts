@@ -33,6 +33,7 @@ export const Id = {
     SLOW_MOTION: 'slow-motion',
     SHIELD: 'shield',
     LASER: 'laser',
+    SPEED_UP: 'speed-up',
     SCORE_100: 'score-100',
     SCORE_200: 'score-200',
     SCORE_500: 'score-500'
@@ -46,6 +47,7 @@ export const Id = {
     REGENERATING: 'regenerating',
     LIGHTNING: 'lightning',
     FROZEN: 'frozen',
+    BOOST: 'boost',
     PORTAL: 'portal',
     DIRECTIONAL: 'directional'
   },

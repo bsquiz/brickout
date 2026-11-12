@@ -6,7 +6,7 @@ import { isDamageableBrick, isDirectionalHitAllowed } from '../brickRules';
 import { nextRandom } from '../random';
 import { getBrickScore } from '../scoring';
 import { awardSkillShot } from '../skillShots';
-import { applyFrozenSlow } from '../ballEffects';
+import { applyBoostSpeed, applyFrozenSlow } from '../ballEffects';
 import type { Ball, Brick, GameState } from '../types';
 
 const addComboScore = (state: GameState, brick: Brick): void => {
@@ -100,6 +100,7 @@ export const hitBrick = (state: GameState, brickIndex: number, ball?: Ball): voi
   const allowed = ball === undefined || isDirectionalHitAllowed(brick, ball) || hasSuperBall || state.activeEffects.overdriveRemaining > 0;
   if (isDamageableBrick(brick) && allowed) brick.hitPoints -= damage;
   if (ball !== undefined && allowed && brick.behavior === Constants.Id.BrickBehavior.FROZEN) applyFrozenSlow(ball);
+  if (ball !== undefined && allowed && brick.behavior === Constants.Id.BrickBehavior.BOOST) applyBoostSpeed(ball);
   if (ball !== undefined && !hasSuperBall) {
     if (getCollisionAxis(ball, brick) === 'horizontal') ball.velocity.x *= -1;
     else ball.velocity.y *= -1;

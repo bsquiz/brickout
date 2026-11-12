@@ -47,27 +47,25 @@ describe('createInputController', () => {
   });
 
 
-  test('activates boost after a quick double tap of a direction key', () => {
+  test.each(['ShiftLeft', 'ShiftRight'])('activates boost directly with %s', (code) => {
     const canvas = document.createElement('canvas');
-    let now = 1_000;
-    const input = createInputController(canvas, undefined, () => now);
-    window.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowLeft' }));
-    window.dispatchEvent(new KeyboardEvent('keyup', { code: 'ArrowLeft' }));
-    now += 180;
-    window.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowLeft' }));
+    const input = createInputController(canvas);
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { code }));
+
     expect(input.state.dash).toBe(true);
-    expect(input.state.left).toBe(true);
+    input.endFrame();
+    expect(input.state.dash).toBe(false);
     input.destroy();
   });
 
-  test('does not boost when directional taps are too far apart', () => {
+  test('does not boost from double-tapping a direction key', () => {
     const canvas = document.createElement('canvas');
-    let now = 1_000;
-    const input = createInputController(canvas, undefined, () => now);
+    const input = createInputController(canvas);
     window.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowRight' }));
     window.dispatchEvent(new KeyboardEvent('keyup', { code: 'ArrowRight' }));
-    now += 300;
     window.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowRight' }));
+
     expect(input.state.dash).toBe(false);
     input.destroy();
   });

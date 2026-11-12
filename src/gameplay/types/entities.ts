@@ -15,6 +15,7 @@ export type Ball = Rectangle & {
   trail: TrailPoint[];
   portalCooldown: number;
   frozenSlowRemaining: number;
+  boostSpeedRemaining: number;
 };
 
 export type Paddle = Rectangle;

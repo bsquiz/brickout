@@ -15,7 +15,8 @@ export const createBall = (paddle: Paddle): Ball => ({
   isCharged: false,
   trail: [],
   portalCooldown: 0,
-  frozenSlowRemaining: 0
+  frozenSlowRemaining: 0,
+  boostSpeedRemaining: 0
 });
 
 export const attachBallToPaddle = (ball: Ball, paddle: Paddle): void => {

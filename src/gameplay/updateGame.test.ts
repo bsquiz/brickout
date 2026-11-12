@@ -132,6 +132,27 @@ describe('updateGame', () => {
     );
   });
 
+  test('moves a boosted ball at the temporary increased speed', () => {
+    const bricks = [createTestBrick({ x: 0 }), createTestBrick({ x: 300, baseX: 300 })];
+    const normal = createTestGameState({
+      ball: createTestBall({ x: 150, y: 300, velocity: { x: 100, y: -100 } }),
+      bricks: [...bricks],
+      alienSpawnRemaining: 100
+    });
+    const boosted = createTestGameState({
+      ball: createTestBall({ x: 150, y: 300, velocity: { x: 100, y: -100 }, boostSpeedRemaining: 1 }),
+      bricks: [...bricks],
+      alienSpawnRemaining: 100
+    });
+
+    updateGame(normal, idleInput, [createTestLevel()], Constants.Game.MAX_FRAME_SECONDS);
+    updateGame(boosted, idleInput, [createTestLevel()], Constants.Game.MAX_FRAME_SECONDS);
+
+    expect(boosted.ball.x - 150).toBeCloseTo(
+      (normal.ball.x - 150) * Constants.Game.Brick.Boost.BALL_SPEED_SCALE
+    );
+  });
+
   test('moves toward a touch target without teleporting', () => {
     const state = createTestGameState();
     const touchInput: InputState = { ...idleInput, paddleTargetX: 450 };

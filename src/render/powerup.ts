@@ -5,7 +5,7 @@ import { drawSpriteFrame } from './primitives/sprite';
 
 export type PowerupSpriteFrame = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export const PowerupSpriteFrames: Record<PowerupType, PowerupSpriteFrame> = {
+export const PowerupSpriteFrames: Partial<Record<PowerupType, PowerupSpriteFrame>> = {
   shrink: 0,
   expand: 1,
   'super-ball': 2,
@@ -25,8 +25,9 @@ export const isPowerupSpriteSheetReady = (sprites?: HTMLImageElement): sprites i
   sprites.naturalWidth >= Constants.Render.Sprite.POWERUP_FRAME_SIZE * Constants.Render.Sprite.POWERUP_FRAME_COLUMNS &&
   sprites.naturalHeight >= Constants.Render.Sprite.POWERUP_FRAME_SIZE * Math.ceil(Constants.Render.Sprite.POWERUP_FRAME_COUNT / Constants.Render.Sprite.POWERUP_FRAME_COLUMNS);
 
-const drawPowerupSprite = (context: CanvasRenderingContext2D, powerup: Powerup, sprites: HTMLImageElement): void => {
+const drawPowerupSprite = (context: CanvasRenderingContext2D, powerup: Powerup, sprites: HTMLImageElement): boolean => {
   const frame = PowerupSpriteFrames[powerup.type];
+  if (frame === undefined) return false;
   const size = Constants.Render.Sprite.POWERUP_ICON_SIZE;
   drawSpriteFrame(context, sprites, {
     frame,
@@ -40,6 +41,7 @@ const drawPowerupSprite = (context: CanvasRenderingContext2D, powerup: Powerup, 
       height: size
     }
   });
+  return true;
 };
 
 export const drawPowerupPill = (
@@ -144,6 +146,24 @@ const shapeRenderers: Record<PowerupShape, ShapeRenderer> = {
     [powerup.x + 19, powerup.y + 7],
     [powerup.x + 13, powerup.y + 7]
   ]),
+  chevrons: (context, powerup) => {
+    const centerX = powerup.x + powerup.width / 2;
+    const centerY = powerup.y + powerup.height / 2;
+    const spacing = Constants.Render.Powerup.SPEED_ICON_SPACING;
+    const halfWidth = Constants.Render.Powerup.SPEED_ICON_HALF_WIDTH;
+    const halfHeight = Constants.Render.Powerup.SPEED_ICON_HALF_HEIGHT;
+    context.lineWidth = Constants.Render.Powerup.SPEED_ICON_LINE_WIDTH;
+    context.strokeStyle = context.fillStyle;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    for (const offsetX of [-spacing / 2, spacing / 2]) {
+      context.beginPath();
+      context.moveTo(centerX + offsetX - halfWidth, centerY - halfHeight);
+      context.lineTo(centerX + offsetX + halfWidth, centerY);
+      context.lineTo(centerX + offsetX - halfWidth, centerY + halfHeight);
+      context.stroke();
+    }
+  },
   coin: (context, powerup) => {
     context.beginPath();
     context.arc(powerup.x + powerup.width / 2, powerup.y + powerup.height / 2, 7, 0, Math.PI * 2);
@@ -181,8 +201,8 @@ export const renderPowerup = (context: CanvasRenderingContext2D, powerup: Poweru
   context.shadowColor = definition.color;
   context.shadowBlur = Constants.Render.Powerup.GLOW_BLUR;
   drawPowerupPill(context, powerup, definition.color);
-  if (isPowerupSpriteSheetReady(sprites)) drawPowerupSprite(context, powerup, sprites);
-  else {
+  const spriteDrawn = isPowerupSpriteSheetReady(sprites) && drawPowerupSprite(context, powerup, sprites);
+  if (!spriteDrawn) {
     context.fillStyle = definition.color;
     shapeRenderers[definition.shape](context, getFallbackIconBounds(powerup));
   }

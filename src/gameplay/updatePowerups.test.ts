@@ -12,4 +12,16 @@ describe('updatePowerups', () => {
     expect(state.activeEffects.stickyRemaining).toBe(Constants.Game.POWERUP_DURATION_SECONDS);
     expect(state.activeEffects.slowMotionRemaining).toBe(Constants.Game.POWERUP_DURATION_SECONDS);
   });
+
+  test('activates the ball speed boost when collected', () => {
+    const state = createTestGameState({
+      powerups: [createTestPowerup({ type: 'speed-up' })]
+    });
+
+    updatePowerups(state, 0);
+
+    expect(state.powerups).toHaveLength(0);
+    expect(state.ball.boostSpeedRemaining).toBe(Constants.Game.Brick.Boost.SPEED_DURATION_SECONDS);
+    expect(state.events).toContain(Constants.Id.GameEvent.POWERUP);
+  });
 });

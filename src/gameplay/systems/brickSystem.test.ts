@@ -13,6 +13,17 @@ describe('brick system explosions', () => {
     expect(ball.frozenSlowRemaining).toBe(Constants.Game.Brick.Frozen.SLOW_DURATION_SECONDS);
   });
 
+  test('temporarily speeds up the ball that hits a boost brick', () => {
+    const boost = createTestBrick({ behavior: 'boost' });
+    const ball = createTestBall();
+    const state = createTestGameState({ bricks: [boost], ball });
+
+    hitBrick(state, 0, ball);
+
+    expect(ball.boostSpeedRemaining).toBe(Constants.Game.Brick.Boost.SPEED_DURATION_SECONDS);
+    expect(ball.frozenSlowRemaining).toBe(0);
+  });
+
   test('restores a regenerating brick after it survives damage', () => {
     const regenerating = createTestBrick({
       behavior: 'regenerating',

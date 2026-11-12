@@ -16,12 +16,10 @@ export type InputController = {
 
 export const createInputController = (
   canvas: HTMLCanvasElement,
-  getArena = (): { width: number; height: number } => ({ width: canvas.width, height: canvas.height }),
-  now = (): number => performance.now()
+  getArena = (): { width: number; height: number } => ({ width: canvas.width, height: canvas.height })
 ): InputController => {
   const state: InputState = { left: false, right: false, launch: false, pause: false, dash: false, paddleTargetX: null };
   let activePointerId: number | null = null;
-  const lastDirectionTap: Record<'left' | 'right', number | null> = { left: null, right: null };
 
   const setKeyboardControl = (event: KeyboardEvent, pressed: boolean): void => {
     if (event.code === Constants.Input.Keyboard.Keys.LAUNCH) {
@@ -42,14 +40,6 @@ export const createInputController = (
     const control = keyControls[event.code];
     if (control === undefined) return;
     event.preventDefault();
-    if (pressed && !event.repeat && (control === 'left' || control === 'right')) {
-      const timestamp = now();
-      const previousTap = lastDirectionTap[control];
-      if (previousTap !== null && timestamp - previousTap <= Constants.Input.Keyboard.DOUBLE_TAP_WINDOW_MS) {
-        state.dash = true;
-        lastDirectionTap[control] = null;
-      } else lastDirectionTap[control] = timestamp;
-    }
     state[control] = pressed;
   };
   const onKeyDown = (event: KeyboardEvent): void => setKeyboardControl(event, true);

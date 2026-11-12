@@ -1,7 +1,8 @@
 import { Constants } from '../constants';
+import { applyBoostSpeed } from '../gameplay/ballEffects';
 import type { Brick, GameState, Powerup, PowerupType } from '../gameplay/types';
 
-export type PowerupShape = 'triangle' | 'plus' | 'diamond' | 'multiball' | 'magnet' | 'clock' | 'shield' | 'bolt' | 'coin' | 'star' | 'crown';
+export type PowerupShape = 'triangle' | 'plus' | 'diamond' | 'multiball' | 'magnet' | 'clock' | 'shield' | 'bolt' | 'chevrons' | 'coin' | 'star' | 'crown';
 
 type PowerupDefinition = {
   label: string;
@@ -84,6 +85,14 @@ export const PowerupRegistry: Record<PowerupType, PowerupDefinition> = {
     apply: (state) => {
       state.activeEffects.laserRemaining = Constants.Game.POWERUP_DURATION_SECONDS;
       state.activeEffects.laserCooldown = 0;
+    }
+  },
+  'speed-up': {
+    label: 'Ball speed boost',
+    color: Constants.Render.Colors.BOOSTED_BALL,
+    shape: 'chevrons',
+    apply: (state) => {
+      for (const ball of [state.ball, ...state.extraBalls]) applyBoostSpeed(ball);
     }
   },
   'score-100': {
