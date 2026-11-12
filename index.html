@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#111827" />
+    <title>Brickout</title>
+  </head>
+  <body>
+    <div class="app-layout">
+      <main id="game-shell" class="game-shell" data-mode="menu">
+      <div class="canvas-wrap">
+        <canvas id="game" width="500" height="500" aria-label="Brickout game board"></canvas>
+        <section id="menu" class="menu" aria-label="Game menu">
+          <div class="menu-card">
+            <header class="menu-brand">
+              <h1>Brickout</h1>
+              <p>Neon arcade demolition</p>
+            </header>
+            <div class="menu-emblem" aria-hidden="true" hidden>
+              <span></span><span></span><span></span><span></span><span></span>
+              <i></i>
+            </div>
+            <p class="menu-kicker" hidden>Ready to break?</p>
+            <p id="menu-message" class="menu-message" hidden>Clear every brick. Keep the ball in play.</p>
+            <p id="menu-high-score" class="menu-high-score" hidden>High score <strong>0</strong></p>
+            <label id="debug-level-control" class="debug-level-control" hidden>
+              Start at level
+              <select id="debug-level" aria-label="Starting level"></select>
+            </label>
+            <button id="start" class="primary-action" type="button">Play game</button>
+            <p id="menu-hint" class="menu-hint">← → move · Double-tap boost · Space launch</p>
+          </div>
+        </section>
+        <p id="gameplay-hint" class="gameplay-hint" hidden>← → to move · Space to launch</p>
+        <section id="pause-menu" class="pause-menu" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden>
+          <div class="pause-card">
+            <p class="pause-kicker">Game paused</p>
+            <h2 id="pause-title">Take a breather</h2>
+            <button id="resume" class="primary-action" type="button">Resume game</button>
+            <button id="restart" type="button">Restart level</button>
+            <div class="pause-settings" aria-label="Game settings">
+              <button id="audio" type="button" aria-pressed="false">Enable sound</button>
+              <button id="trail-style" type="button">Trail: Classic</button>
+              <label class="motion-toggle"><input id="reduced-motion" type="checkbox" /><span aria-hidden="true"></span>Calm effects</label>
+            </div>
+            <p class="pause-hint">Press Esc or P to resume</p>
+          </div>
+        </section>
+        <section id="upgrade-menu" class="upgrade-menu" aria-labelledby="upgrade-title" hidden>
+          <div class="upgrade-card">
+            <p class="pause-kicker">Boss defeated</p>
+            <h2 id="upgrade-title">Choose an upgrade</h2>
+            <div id="upgrade-options" class="upgrade-options"></div>
+          </div>
+        </section>
+      </div>
+      <nav class="game-controls" aria-label="Game controls">
+        <button id="pause" class="pause-button" type="button" aria-label="Pause game" hidden><span aria-hidden="true">Ⅱ</span> Pause</button>
+        <div id="touch-actions" class="touch-actions" hidden>
+          <button id="dash" type="button">Dash</button>
+        </div>
+      </nav>
+      </main>
+      <aside id="code-visualizer" class="code-visualizer" aria-label="Live code flow visualizer" hidden>
+        <details open>
+          <summary><span>Live code flow</span><small id="code-frame">Frame 0</small></summary>
+          <div class="code-summary" aria-label="Current game state">
+            <span>Phase <strong id="code-phase">menu</strong></span>
+            <span id="code-entities">1 ball · 0 bricks · 0 transient</span>
+          </div>
+          <div id="code-pipeline" class="code-pipeline" aria-label="Runtime system pipeline"></div>
+          <section class="code-inspector" aria-live="polite">
+            <h2 id="code-inspector-title">Balls + collisions</h2>
+            <p id="code-inspector-description">Select a system to inspect it.</p>
+            <code id="code-inspector-source">gameplay/systems/ballSystem.ts</code>
+          </section>
+          <p id="code-events" class="code-events">No events this frame</p>
+        </details>
+      </aside>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

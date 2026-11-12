@@ -1,0 +1,122 @@
+export const Game = {
+  Arena: {
+    PORTRAIT: { width: 375, height: 960, hudHeight: 50 },
+    LANDSCAPE: { width: 675, height: 500, hudHeight: 50 },
+    BASELINE: { width: 375, height: 500, hudHeight: 50 },
+    ORIENTATION_BREAKPOINT: 1.1,
+    PADDLE_BOTTOM_MARGIN: 0
+  },
+  INITIAL_LIVES: 3,
+  LEVEL_COUNTDOWN_SECONDS: 3,
+  LEVEL_TRANSITION_SECONDS: 2.2,
+  MAX_FRAME_SECONDS: 0.05,
+  COMBO_WINDOW_SECONDS: 1.5,
+  DASH_DISTANCE: 105,
+  DASH_COOLDOWN_SECONDS: 2.4,
+  Serve: {
+    DEFAULT_AIM: 0.35,
+    MAX_HORIZONTAL_RATIO: 0.78,
+    AIM_CHANGE_PER_SECOND: 1.45,
+    GUIDE_LENGTH: 78
+  },
+  PaddleEnglish: {
+    IMPACT_WEIGHT: 0.82,
+    MOVEMENT_WEIGHT: 0.42,
+    MAX_HORIZONTAL_RATIO: 0.88,
+    MIN_VERTICAL_RATIO: 0.28
+  },
+  RallyHeat: {
+    MAX_RETURNS: 8,
+    SPEED_BONUS_PER_RETURN: 0.035,
+    MAX_SPEED_MULTIPLIER: 1.32,
+    SCORE_BONUS_PER_RETURN: 0.08,
+    MUSIC_RATE_BONUS: 0.055,
+    GAUGE_WIDTH: 88
+  },
+  Overdrive: {
+    DURATION_SECONDS: 6,
+    SCORE_MULTIPLIER: 1.5,
+    BONUS_DAMAGE: 1
+  },
+  PaddleForgiveness: {
+    BASE_PIXELS: 4,
+    SPEED_THRESHOLD: 280,
+    PIXELS_PER_100_SPEED: 2,
+    MAX_EXTRA_PIXELS: 6
+  },
+  Brick: {
+    MAX_BALL_SPEED: 360,
+    BALL_SPEED_MULTIPLIER: 1.012,
+    MOVEMENT_SPEED: 28,
+    MOVEMENT_RANGE: 18,
+    REGENERATION_SECONDS: 2,
+    WRONG_SIDE_BANNER_SECONDS: 0.5,
+    OPENING_BLITZ_BRICKS: 2,
+    BANK_MASTER_BOUNCES: 2,
+    Frozen: {
+      SLOW_DURATION_SECONDS: 2.5,
+      BALL_SPEED_SCALE: 0.55
+    }
+  },
+  SkillShot: {
+    OPENING_BLITZ_POINTS: 100,
+    BANK_MASTER_POINTS: 75,
+    ALIEN_COMBO_POINTS: 150,
+    OVERDRIVE_POINTS: 250,
+    COUNTER_SHOT_POINTS: 175
+  },
+  ScorePowerup: {
+    SMALL_POINTS: 100,
+    MEDIUM_POINTS: 200,
+    LARGE_POINTS: 500
+  },
+  Portal: {
+    COOLDOWN_SECONDS: 0.32,
+    EXIT_PADDING: 5
+  },
+  Grading: {
+    SECONDS_PER_BRICK: 4,
+    BASE_PAR_SECONDS: 12,
+    S_THRESHOLD: 90,
+    A_THRESHOLD: 75,
+    B_THRESHOLD: 60
+  },
+  HIT_STOP_SECONDS: 0.035,
+  PADDLE_DEATH_SECONDS: 0.85,
+  SLOW_MOTION_SCALE: 0.6,
+  POWERUP_DURATION_SECONDS: 8,
+  POWERUP_BANNER_SECONDS: 1.2,
+  ALIEN_WARNING_SECONDS: 1.1,
+  ALIEN_HIT_STOP_SECONDS: 0.08,
+  LEVEL_INTRO_TITLE_SECONDS: 0.75,
+  Level: {
+    TITLES: ['First Contact', 'Steel Current', 'The Pyramid', 'Twin Towers', 'Fortress', 'The Wall', 'Crossfire', 'Overload', 'Final Signal', 'The Divide']
+  },
+  PerfectReturn: {
+    CENTER_THRESHOLD: 0.18,
+    BONUS_DAMAGE: 1
+  },
+  Boss: {
+    LEVEL_INTERVAL: 3,
+    HEALTH: 6,
+    POWERUP_DROPS: 3
+  },
+  Combo: {
+    MILESTONES: [3, 6, 10],
+    MAX_RALLY_MULTIPLIER: 5
+  },
+  NearMiss: {
+    DISTANCE: 24,
+    POINTS: 25
+  },
+  Camera: {
+    IMPACT_ZOOM: 0.025,
+    BOSS_ZOOM: 0.055
+  },
+  AimAssist: {
+    MIN_STRENGTH: 0.12,
+    MAX_STRENGTH: 0.72,
+    TURNS_TO_MAX: 8,
+    FINAL_BRICK_HITBOX_PADDING: 6
+  }
+} as const;
